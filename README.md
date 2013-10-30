@@ -15,7 +15,9 @@ requirements : {
 ### run 
 --------
     composer update
-### add to the appKernel new Anis\CommerceBundle\AnisComemrceBundle(),
+### AppKernel
+Add to the appKernel 
+    new Anis\CommerceBundle\AnisComemrceBundle(),
 ### add the resource import in the routing 
     anis_commerce:
         resource : "@AnisCommerceBundle/Resources/config/routing.yml"
@@ -23,4 +25,4 @@ requirements : {
 	
 ### run 
     php app/console assets:install
-### configure your database parameters
+6) configure your database parameters
