@@ -1,7 +1,7 @@
 {
     "name": "anisdjer/anis-commercebundle",
     "type": "symfony-bundle",
-    "description": "Mu test application.", 
+    "description": "My test application.", 
     "homepage": "https://github.com/anisdjer/anis-commercebundle",
     "license": "MIT",
     "authors": [
