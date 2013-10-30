@@ -1,0 +1,7 @@
+parameters:
+#    anis_commerce.example.class: Anis\CommerceBundle\Example
+
+services:
+#    anis_commerce.example:
+#        class: %anis_commerce.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

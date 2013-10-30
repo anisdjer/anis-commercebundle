@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <LINK REL="SHORTCUT ICON" href="{{ asset('bundles/aniscommerce/favicon.ico') }}">
+    <meta charset="utf-8">
+    {% block title %}
+        <title>Bienvenue !</title>
+    {% endblock %}
+    <meta name="viewport" content="initial-scale = 1.0, maximum-scale = 1.0, user-scalable = no, width = device-width">
+
+    <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <!--<link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/style.css.twig') }}" media="screen"> -->
+    {% block stylesheets %}
+        {% include 'AnisCommerceBundle::style.css.twig' %}
+    {% endblock %}
+    <!--[if lte IE 7]><link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/style.ie7.css')  }}" media="screen" /><![endif]-->
+    <link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/style.responsive.css') }}" media="all">
+
+
+    <script src="{{ asset('bundles/aniscommerce/js/jquery.js') }}"></script>
+    <script src="{{ asset('bundles/aniscommerce/js/script.js') }}"></script>
+    <script src="{{ asset('bundles/aniscommerce/js/script.responsive.js') }}"></script>
+
+
+    <style>
+        {% block style %}
+        .art-content .art-postcontent-0 .layout-item-0 { color: #DBDBDB; background: #333333; padding: 10px;  }
+        .art-content .art-postcontent-0 .layout-item-1 { color: #D4D4D4; background: #555555; padding: 10px;  }
+        .art-content .art-postcontent-0 .layout-item-2 { padding: 20px;  }
+        .ie7 .post .layout-cell {border:none !important; padding:0 !important; }
+        .ie6 .post .layout-cell {border:none !important; padding:0 !important; }
+        {% endblock %}
+    </style>
+</head>
+<body>
+<div id="art-main">
+    <nav class="art-nav clearfix">
+        <ul class="art-hmenu" >
+            {% block menu %}
+            <li>
+
+                <a href="{{ path('produit')}}"
+                        {% if app.request.attributes.get('_route') == "produit" %}
+                            class="active"
+                        {% endif %}
+                    >
+                        Produits</a>
+            </li>
+            <li>
+                <a href="{{ path('client')}}"
+                   {% if app.request.attributes.get('_route') == "client" or app.request.attributes.get('_route') == "client1" %}
+                       class="active"
+                    {% endif %}
+                    >
+                        Clients</a>
+            </li>
+            <li>
+                <a href="{{ path('client')}}"
+                   {% if app.request.attributes.get('_route') == "facture" %}
+                    class="active">
+                    {% endif %}
+                    >
+                        Factures</a>
+            </li>
+
+        {% endblock %}
+        </ul>
+
+    </nav>
+    {% block header %}
+
+    {% endblock %}
+    <div class="art-sheet clearfix">
+        <div class="art-layout-wrapper clearfix">
+            <div class="art-content-layout">
+                <div class="art-content-layout-row">
+                    <div class="art-layout-cell art-content clearfix">
+                        <article class="art-post art-article">
+                            <div class="art-postcontent art-postcontent-0 clearfix">
+                                <div class="art-content-layout">
+                                    {% block middlemenu %}
+                                    {% endblock %}
+                                </div>
+                                {% block content %}
+                                {% endblock %}
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block footer %}
+
+    {% endblock %}
+    </div>
+    {% block copyright %}
+    <p class="art-page-footer">
+        <span id="art-footnote-links">Web Template proudly realised by <a href="http://bouhachem.co.nf/" target="_blank">Anis BOUHACHEM.</a></span>
+    </p>
+    {% endblock %}
+</div>
+
+
+</body>
+</html>

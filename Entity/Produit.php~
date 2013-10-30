@@ -1,0 +1,439 @@
+<?php
+
+namespace Anis\CommerceBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * Produit
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Anis\CommerceBundle\Entity\ProduitRepository")
+ * @ORM\HasLifecycleCallbacks
+ */
+class Produit
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="reference", type="string", length=255)
+     */
+    private $reference;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="float")
+     * @Assert\Range(min=0, minMessage="Price must be positive >= 0",
+     *               invalidMessage = "Price is not a valid number")
+     */
+    private $price;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="supplier", type="string", length=255)
+     */
+    private $supplier;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="discounted", type="boolean")
+     */
+    private $discounted;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="discountValue", type="float")
+     * @Assert\Range(min=0, minMessage="Discount must be positive >= 0",
+     *               max=100, maxMessage="Discount must be less than 100",
+     * invalidMessage = "Discount is not a valid number")
+     */
+    private $discountValue;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateDiscountEnd", type="date")
+     */
+    private $dateDiscountEnd;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="stock", type="integer")
+     * @Assert\Range(min=0, minMessage="Discount must be positive >= 0")
+     */
+    private $stock;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="category", type="string", length=255)
+     */
+    private $category;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="photo", type="string", length=255)
+     * @Assert\File(maxSize="1024k", mimeTypes = {"image/jpeg", "image/png", "image/gif", "image/jpg"}, mimeTypesMessage = "This is a picture file")
+     */
+    private $photo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     */
+    private $description;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set reference
+     *
+     * @param string $reference
+     * @return Produit
+     */
+    public function setReference($reference)
+    {
+        $this->reference = $reference;
+    
+        return $this;
+    }
+
+    /**
+     * Get reference
+     *
+     * @return string 
+     */
+    public function getReference()
+    {
+        return $this->reference;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     * @return Produit
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float 
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Produit
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set supplier
+     *
+     * @param string $supplier
+     * @return Produit
+     */
+    public function setSupplier($supplier)
+    {
+        $this->supplier = $supplier;
+    
+        return $this;
+    }
+
+    /**
+     * Get supplier
+     *
+     * @return string 
+     */
+    public function getSupplier()
+    {
+        return $this->supplier;
+    }
+
+    /**
+     * Set discounted
+     *
+     * @param boolean $discounted
+     * @return Produit
+     */
+    public function setDiscounted($discounted)
+    {
+        $this->discounted = $discounted;
+    
+        return $this;
+    }
+
+    /**
+     * Get discounted
+     *
+     * @return boolean 
+     */
+    public function getDiscounted()
+    {
+        return $this->discounted;
+    }
+
+    /**
+     * Set discountValue
+     *
+     * @param string $discountValue
+     * @return Produit
+     */
+    public function setDiscountValue($discountValue)
+    {
+        $this->discountValue = $discountValue;
+    
+        return $this;
+    }
+
+    /**
+     * Get discountValue
+     *
+     * @return string 
+     */
+    public function getDiscountValue()
+    {
+        return $this->discountValue;
+    }
+
+    /**
+     * Set dateDiscountEnd
+     *
+     * @param \DateTime $dateDiscountEnd
+     * @return Produit
+     */
+    public function setDateDiscountEnd($dateDiscountEnd)
+    {
+        $this->dateDiscountEnd = $dateDiscountEnd;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateDiscountEnd
+     *
+     * @return \DateTime 
+     */
+    public function getDateDiscountEnd()
+    {
+        return $this->dateDiscountEnd;
+    }
+
+    /**
+     * Set stock
+     *
+     * @param integer $stock
+     * @return Produit
+     */
+    public function setStock($stock)
+    {
+        $this->stock = $stock;
+    
+        return $this;
+    }
+
+    /**
+     * Get stock
+     *
+     * @return integer 
+     */
+    public function getStock()
+    {
+        return $this->stock;
+    }
+
+    /**
+     * Set category
+     *
+     * @param string $category
+     * @return Produit
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return string 
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set picture
+     *
+     * @param string $picture
+     * @return Produit
+     */
+    public function setPicture($picture)
+    {
+        $this->photo = $picture;
+    
+        return $this;
+    }
+
+    /**
+     * Get picture
+     *
+     * @return string 
+     */
+    public function getPicture()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Produit
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /************************************************************************/
+    public function getAbsolutePath()
+    {
+        return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
+    }
+
+    public function getWebPath()
+    {
+        return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
+    }
+
+    protected function getUploadRootDir()
+    {
+        // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
+        return __DIR__.'/../../../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+        // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
+        // le document/image dans la vue.
+        return 'uploads/commerce/products/photos';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->photo) {
+            // faites ce que vous voulez pour générer un nom unique
+            $this->path = sha1(uniqid(mt_rand(), true)).'.'.$this->photo->guessExtension();
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->photo) {
+            return;
+        }
+
+        // s'il y a une erreur lors du déplacement du fichier, une exception
+        // va automatiquement être lancée par la méthode move(). Cela va empêcher
+        // proprement l'entité d'être persistée dans la base de données si
+        // erreur il y a
+        $this->photo->move($this->getUploadRootDir(), $this->path);
+
+        unset($this->photo);
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        if ($photo = $this->getAbsolutePath()) {
+            unlink($photo);
+        }
+    }
+    /************************************************************************/
+}

@@ -1,0 +1,6 @@
+anis_commerce_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: AnisCommerceBundle:Default:index }
+:*:
+    resource : "@AnisCommerceBundle/Controller/"
+    type: annotation
