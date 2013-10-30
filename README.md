@@ -16,7 +16,8 @@ requirements : {
 --------
     composer update
 ### AppKernel
-Add to the appKernel 
+Add to the appKernel
+-
     new Anis\CommerceBundle\AnisComemrceBundle(),
 ### add the resource import in the routing 
     anis_commerce:
