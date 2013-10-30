@@ -1,6 +1,9 @@
 anis-commercebundle
 ===================
 
+
+1) Installing the Standard Edition
+----------------------------------
 1) add in the composer.json
 
 requirements : {
