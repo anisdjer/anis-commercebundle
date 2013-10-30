@@ -6,11 +6,15 @@ anis-commercebundle
 ----------------------------------
 1) add in the composer.json
 
+### Use Composer (*recommended*)
+
 requirements : {
  ... 
  "anisdjer/anis-commercebundle" : "dev-master",
  }
-2) run composer update
+2) run 
+--------
+    composer update
 3) add to the appKernel new Anis\CommerceBundle\AnisComemrceBundle(),
 4) add the resource import in the routing 
 anis_commerce:
