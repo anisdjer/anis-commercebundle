@@ -15,16 +15,15 @@ class ClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('gender',"choice",  array('choices' => array("M", "F")))
-            ->add('nameTitle',"choice",  array('choices' => array("M." => "M.", "Mme." => "Mme.","Mlle." => "Mlle")))
+            ->add('gender',"choice",  array('choices' => array("H" => "Homme", "F" => "Femme")))
             ->add('firstname')
             ->add('lastname')
             ->add('emailAddress', 'email')
             ->add('age')
             ->add('enabled', 'checkbox', array('data' => true))
             ->add('registrationDate','date',array('widget' => 'single_text', 'data' => new \DateTime("now")))
-            ->add('lastVisit','date', array('widget' => 'single_text'))
-            ->add('language',"choice",  array('choices' => array("en" => "English", "fr" => "Français", "it" => "Italien")))
+            //->add('lastVisit','date', array('widget' => 'single_text'))
+            ->add('language',"choice",  array('choices' => array("en" => "English", "fr" => "Français", "it" => "Italien"), 'data' => 'fr'))
             ->add('cin')
             ->add('tel')
         ;

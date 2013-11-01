@@ -38,8 +38,6 @@ function deleteUser(url , sender_)
 }
 
 function search(url, metaField, options){
-//    if(! options)
-//        options = {};
 
     options = jQuery.extend({}, search.prototype.options, options || {});
 
@@ -51,6 +49,7 @@ function search(url, metaField, options){
     $(".search").each(function(index, field){
         if(field.value){
             values[metaField[index]] = field.value.trim();
+            console.log(metaField[index] + " " + field.value.trim());
         }
     });
 
@@ -68,7 +67,14 @@ function search(url, metaField, options){
                 $(".entity").remove();
 
                 data.forEach(function(client, i){
+
+
+                    var show_ = target.find(".art-button.show")[0];
+                    var edit_ = target.find(".art-button.edit")[0];
+                    var delete_ = target.find(".art-button.delete")[0];
+
                     var t;
+
                     metaField.forEach(function(value, index){
                         t=  target.find("."+value)[0];
 
@@ -81,6 +87,13 @@ function search(url, metaField, options){
                             t.innerHTML = client[value];
                         }
                     });
+
+
+                    show_.href = client["showURL"];
+                    edit_.href = client["editURL"];
+                    delete_.href = client["deleteURL"];
+
+
                     target.clone().insertBefore(footer);
                     delim.clone().insertBefore(footer);
                 });

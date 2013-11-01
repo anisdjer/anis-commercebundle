@@ -58,7 +58,13 @@ class ProduitController extends Controller
         $query = $em->getRepository('AnisCommerceBundle:Produit')->getListBy($request->request->all());
         $produits = array();
         foreach($query as $produit){
-            $produits[] = $produit->toArray();
+
+            $produitArray = $produit->toArray();
+            $produitArray["showURL"] = $this->generateUrl("produit_show", array('id' => $produit->getId()));
+            $produitArray["editURL"] = $this->generateUrl("produit_edit", array('id' => $produit->getId()));
+            $produitArray["deleteURL"] = $this->generateUrl("produit_delete", array('id' => $produit->getId()));
+
+            $produits[] = $produitArray;
         }
         //die(var_dump($query));
         $response = new Response(json_encode($produits));

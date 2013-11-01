@@ -1,6 +1,57 @@
+{#
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Facture list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Datefacturation</th>
+                <th>Datepaiement</th>
+                <th>Methodpaiement</th>
+                <th>Total</th>
+                <th>Paid</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('facture_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{% if entity.dateFacturation %}{{ entity.dateFacturation|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.datePaiement %}{{ entity.datePaiement|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.methodPaiement }}</td>
+                <td>{{ entity.total }}</td>
+                <td>{{ entity.paid }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('facture_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('facture_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('facture_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
+#}
 {% extends "AnisCommerceBundle::base_layout.html.twig" %}
 {% block title %}
-    <title>Clients</title>
+    <title>Factures</title>
 {% endblock %}
 {% block style %}
     <style xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
@@ -34,32 +85,35 @@
                                                 <tbody>
 
                                                 <tr>
-                                                    <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10"><span style="font-weight: bold; font-size: 16px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;"><center>Clients</center></span><br></td>
+                                                    <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10"><span style="font-weight: bold; font-size: 16px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;"><center>Factures</center></span><br></td>
                                                 </tr>
                                                 <tr>
                                                     <th style=" width: 20px; ">Id</th>
-                                                    <th style=" ">Carte Identit&eacute;</th>
-                                                    <th style=" ">Pr&eacute;nom</th>
-                                                    <th style=" ">Nom</th>
-                                                    <th style=" ">T&eacute;l&eacute;phone</th>
-                                                    <th style=" ">Age</th>
-                                                    <th style=" ">Email</th>
+                                                    <th style=" ">Date Facturation&eacute;</th>
+                                                    <th style=" ">Date Paiement</th>
+                                                    <th style=" ">M&eacute;thode Paiement</th>
+                                                    <th style=" ">Somme</th>
+                                                    <th style=" ">Payée</th>
                                                     <td style="width: 50px; vertical-align: middle; text-align: right; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
-                                                        <!--<a href="{{ path("client_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Export</span></a>-->
-                                                        <a href="{{ path("client_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Nouveau Client</span></a>
+                                                        <a href="{{ path("facture_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Nouvelle Facture</span></a>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th style=" width: 20px; "><input type="number" style="width: 70px;height: 20px" min=0 class="search id" placeholder="ID" /> </th>
-                                                    <th style=" "><input type="text" class="search cin" placeholder="CIN"/></th>
-                                                    <th style=" "><input type="text" class="search firstname" placeholder="Pr&eacute;nom"/></th>
-                                                    <th style=" "><input type="text" class="search lastname" placeholder="Nom"/></th>
-                                                    <th style=" "><input type="text" class="search tel" placeholder="tel"/></th>
-                                                    <th style=" "><input type="number" style="width: 70px;height: 20px" min=0 max=100  class="search age" placeholder="Age"/></th>
-                                                    <th style=" "><input type="email" class="search emailAddress" placeholder="Email"/></th>
+                                                    <th style=" "><input type="text" class="search dateFacturation" placeholder="facturation"/></th>
+                                                    <th style=" "><input type="text" class="search datePaiement" placeholder="Paiement"/></th>
+                                                    <th style=" "><input type="text" class="search methodPaiement" placeholder="methode"/></th>
+                                                    <th style=" "><input type="text" class="search total" placeholder="Somme"/></th>
+                                                    <th style=" ">
+                                                        <select class="search paid" >
+                                                            <option value="2">Tous</option>
+                                                            <option value="1">Payées</option>
+                                                            <option value="0">Non P.</option>
+                                                        </select>
+                                                    </th>
                                                     <td style="width: 50px; vertical-align: middle; text-align: right; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
-                                                        <!--<a href="{{ path("client_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Export</span></a>-->
-                                                        <a class="art-button"><span  onclick="search('{{ path('client_search') }}', ['id', 'cin', 'firstname', 'lastname', 'tel', 'age', 'emailAddress']);" style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Recherche</span></a>
+                                                        <!--<a href="{{ path("facture_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Export</span></a>-->
+                                                        <a class="art-button"><span  onclick="search('{{ path('client_search') }}', ['id', 'dateFacturation', 'datePaiement', 'methodPaiement', 'total', 'paid' ]);" style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Recherche</span></a>
                                                     </td>
                                                 </tr>
                                                 <tr style="height: 0 !important; max-height: 2px !important;background-color: #636363"><td colspan="10" ></td></tr>
@@ -67,7 +121,7 @@
 
                                                     <tr class="entity" style="border-radius: 20px ;">
                                                         <td  style="text-align: center; vertical-align: middle;width: 20px !important;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
-                                                             <ul>
+                                                            <ul>
 
                                                                 <li style="text-align: left;">
                                                                     <span class="id">
@@ -78,35 +132,31 @@
                                                         </td>
                                                         <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
 
-                                                                <span class="cin" >{{ entity.cin }}</span>
+                                                            <span class="cin" >{{ entity.dateFacturation }}</span>
 
                                                         </td>
                                                         <td style="text-align: center; vertical-align: middle;   border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
-                                                            <span class="firstname" > {{ entity.firstname }}</span>
+                                                            <span class="firstname" >{{ entity.datePaiement }}</span>
                                                         </td>
                                                         <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
 
-                                                                <span class="lastname" >{{ entity.lastname }}</span>
+                                                            <span class="lastname" >{{ entity.methodPaiement }}</span>
                                                         </td>
                                                         <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
 
-                                                           <span class="tel" > {{ entity.tel }}</span>
+                                                            <span class="tel" > {{ entity.total }}</span>
                                                         </td>
                                                         <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
 
-                                                            <span class="age" class="id">{{ entity.age }}</span>
+                                                            <span class="age" class="id">{{ entity.paid }}</span>
                                                         </td>
-                                                        <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
-
-                                                            <a style="color : #000000" href="mailto:{{ entity.emailAddress }}" ><span class="emailAddress">{{ entity.emailAddress }}</span></a>
-                                                       </td>
                                                         <td style="width: 200px; vertical-align: middle; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;">
                                                             <table class="art-article" style="border-radius: 20px ;margin-left: auto;">
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; width: 50%;"><a href="{{ path('client_show' , {'id': entity.id}) }}" class="art-button show"><img width="16px" title="details" src="{{ asset("bundles/aniscommerce/images/voir.png") }}" /></a></td>
-                                                                    <td style="width: 68px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a href="{{ path('client_edit' , {'id': entity.id}) }}" class="art-button edit"><img width="16px" title="edit" src="{{ asset("bundles/aniscommerce/images/edit.png") }}" /></a></td>
-                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a onclick="deleteUser('{{ path('client_delete' , { 'id' : entity.id}) }}' , this);" class="art-button delete"><img width="16px" title="delete" src="{{ asset("bundles/aniscommerce/images/supprimer.png") }}" /></a></td>
+                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; width: 50%;"><a href="{{ path('facture_show' , {'id': entity.id}) }}" class="art-button"><img width="16px" title="details" src="{{ asset("bundles/aniscommerce/images/voir.png") }}" /></a></td>
+                                                                    <td style="width: 68px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a href="{{ path('facture_edit' , {'id': entity.id}) }}" class="art-button"><img width="16px" title="edit" src="{{ asset("bundles/aniscommerce/images/edit.png") }}" /></a></td>
+                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a onclick="deleteUser('{{ path('facture_delete' , { 'id' : entity.id}) }}' , this);" class="art-button"><img width="16px" title="delete" src="{{ asset("bundles/aniscommerce/images/supprimer.png") }}" /></a></td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -120,7 +170,7 @@
                                                 <tr class="entitiesfooter">
                                                     <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10">
                                                         <span style="font-weight: bold; font-size: 10px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;">
-                                                            <center>{% if page > 1 %}<a href="{{ path('client1', {page : 1}) }}" class="art-button"  > << First</a><a href="{{ path('client1', {page : page-1}) }}" class="art-button"  > < Previous</a>{% endif %} &nbsp;&nbsp; page {{ page }}/{{ pages }} &nbsp;&nbsp; {% if page < pages %}<a href="{{ path('client1', {page : page+1}) }}" class="art-button"  >Next ></a><a href="{{ path('client1', {page : pages}) }}" class="art-button"  >Last >></a>{% endif %}</center>
+                                                            <center>{% if page > 1 %}<a href="{{ path('client1', {page : page-1}) }}" class="art-button"  > < Previous</a>{% endif %} &nbsp;&nbsp; page {{ page }}/{{ pages }} &nbsp;&nbsp; {% if page < pages %}<a href="{{ path('client1', {page : page+1}) }}" class="art-button"  >Next >{% endif %}</a></center>
                                                         </span>
                                                         <br>
                                                     </td>
@@ -139,5 +189,3 @@
     </div>
 
 {% endblock %}
-
-

@@ -40,7 +40,7 @@
             <li>
 
                 <a href="{{ path('produit')}}"
-                        {% if app.request.attributes.get('_route') == "produit" %}
+                        {% if app.request.attributes.get('_route') in [ "produit" , "produit_new" ] %}
                             class="active"
                         {% endif %}
                     >
@@ -48,16 +48,16 @@
             </li>
             <li>
                 <a href="{{ path('client')}}"
-                   {% if app.request.attributes.get('_route') == "client" or app.request.attributes.get('_route') == "client1" %}
+                   {% if app.request.attributes.get('_route')  in ["client" ,"client1", "client_new" ]%}
                        class="active"
                     {% endif %}
                     >
                         Clients</a>
             </li>
             <li>
-                <a href="{{ path('client')}}"
-                   {% if app.request.attributes.get('_route') == "facture" %}
-                    class="active">
+                <a href="{{ path('facture')}}"
+                   {% if app.request.attributes.get('_route')  in ["facture" , "facture_new" ] %}
+                    class="active"
                     {% endif %}
                     >
                         Factures</a>

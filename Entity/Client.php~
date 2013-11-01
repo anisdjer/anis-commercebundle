@@ -62,7 +62,7 @@ class Client
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="registrationDate", type="date")
+     * @ORM\Column(name="registrationDate", type="date", nullable=true)
      */
     private $registrationDate;
 
@@ -97,19 +97,19 @@ class Client
     /**
      * @var string
      *
-     * @ORM\Column(name="nationality", type="string", length=25)
+     * @ORM\Column(name="cin", type="string", length=8)
      */
-    private $nationality;
-
-
-
+    private $cin;
     /**
-     * @return string
+     * @var string
+     *
+     * @ORM\Column(name="tel", type="string", length=8)
      */
-    public function getNationality()
-    {
-        return $this->nationality;
-    }
+    private $tel;
+
+
+
+
 
 
 
@@ -354,10 +354,53 @@ class Client
     }
 
     /**
-     * @param string $nationality
+     * @param string $cin
      */
-    public function setNationality($nationality)
+    public function setCin($cin)
     {
-        $this->nationality = $nationality;
+        $this->cin = $cin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCin()
+    {
+        return $this->cin;
+    }
+    /**
+     * @param string $tel
+     */
+    public function setTel($tel)
+    {
+        $this->tel = $tel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTel()
+    {
+        return $this->tel;
+    }
+
+    public function toArray()
+    {
+        $attributes = array();
+        if($this->age!= NULL)
+            $attributes["id"] = $this->id;
+        if($this->age!= NULL)
+            $attributes["firstname"] = $this->firstname;
+        if($this->age!= NULL)
+            $attributes["lastname"] = $this->lastname;
+        if($this->age!= NULL)
+            $attributes["emailAddress"] = $this->emailAddress;
+        if($this->age!= NULL)
+            $attributes["age"] = $this->age;
+        if($this->age!= NULL)
+            $attributes["cin"] = $this->cin;
+        if($this->age!= NULL)
+            $attributes["tel"] = $this->tel;
+        return $attributes;
     }
 }

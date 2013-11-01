@@ -4,27 +4,25 @@ namespace Anis\CommerceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Anis\CommerceBundle\Entity\Client;
-use Anis\CommerceBundle\Form\ClientType;
-
+use Anis\CommerceBundle\Entity\Facture;
+use Anis\CommerceBundle\Form\FactureType;
 
 /**
- * Client controller.
+ * Facture controller.
  *
- * @Route("/client")
+ * @Route("/facture")
  */
-class ClientController extends Controller
+class FactureController extends Controller
 {
 
     /**
-     * Lists all Client entities.
+     * Lists all Facture entities.
      *
-     * @Route("/{page}", name="client1", requirements={"page" = "\d+"})
-     * @Route("/", name="client")
+     * @Route("/{page}", name="facture1", requirements={"page" = "\d+"})
+     * @Route("/", name="facture")
      * @Method("GET")
      * @Template()
      */
@@ -32,28 +30,11 @@ class ClientController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('AnisCommerceBundle:Client')->findAllLimited($page);
+        $entities = $em->getRepository('AnisCommerceBundle:Facture')->findAllLimited($page);
 
 
-        $query = $em->createQuery('SELECT COUNT(u.id) FROM AnisCommerceBundle:Client u');
+        $query = $em->createQuery('SELECT COUNT(u.id) FROM AnisCommerceBundle:Facture u');
         $count = $query->getSingleScalarResult();
-
-
-        /** Search by criteria for a client */
-//        $em = $this->getDoctrine()->getManager();
-//        $query = $em->getRepository('AnisCommerceBundle:Client')->getListBy(array('firstname' => 'Khalil'));
-//        var_dump($query);die();
-        /** End Search */
-
-//        $cme = new \Doctrine\ORM\Tools\Export\ClassMetadataExporter();
-//        $exporter = $cme->getExporter('xml', 'c:/temp/exp.xml');
-//        $classes = array(
-//            $em->getClassMetadata('Anis\CommerceBundle\Entity\Client')
-//        );
-//        $exporter->setMetadata($classes);
-//        $exporter->setOverwriteExistingFiles(true);
-//        $exporter->export();
-
 
         return array(
             'entities' => $entities,
@@ -65,7 +46,7 @@ class ClientController extends Controller
     /**
      * Search for clients by criteria.
      *
-     * @Route("/search", name="client_search")
+     * @Route("/search", name="facture_search")
      * @Method("POST")
      */
     public function searchAction(Request $request)
@@ -74,34 +55,34 @@ class ClientController extends Controller
         //die(var_dump($request->request));
         $em = $this->getDoctrine()->getManager();
 
-        $query = $em->getRepository('AnisCommerceBundle:Client')->getListBy($request->request->all());
+        $query = $em->getRepository('AnisCommerceBundle:Facture')->getListBy($request->request->all());
         $clients = array();
         foreach($query as $client){
-
             $clientArray = $client->toArray();
             $clientArray["showURL"] = $this->generateUrl("client_show", array('id' => $client->getId()));
             $clientArray["editURL"] = $this->generateUrl("client_edit", array('id' => $client->getId()));
             $clientArray["deleteURL"] = $this->generateUrl("client_delete", array('id' => $client->getId()));
+
             $clients[] = $clientArray;
         }
-
-
         //die(var_dump($query));
         $response = new Response(json_encode($clients));
 
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+
+
     /**
-     * Creates a new Client entity.
+     * Creates a new Facture entity.
      *
-     * @Route("/", name="client_create")
+     * @Route("/", name="facture_create")
      * @Method("POST")
-     * @Template("AnisCommerceBundle:Client:new.html.twig")
+     * @Template("AnisCommerceBundle:Facture:new.html.twig")
      */
     public function createAction(Request $request)
     {
-        $entity = new Client();
+        $entity = new Facture();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
@@ -110,7 +91,7 @@ class ClientController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('client_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('facture_show', array('id' => $entity->getId())));
         }
 
         return array(
@@ -120,16 +101,16 @@ class ClientController extends Controller
     }
 
     /**
-    * Creates a form to create a Client entity.
-    *
-    * @param Client $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createCreateForm(Client $entity)
+     * Creates a form to create a Facture entity.
+     *
+     * @param Facture $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Facture $entity)
     {
-        $form = $this->createForm(new ClientType(), $entity, array(
-            'action' => $this->generateUrl('client_create'),
+        $form = $this->createForm(new FactureType(), $entity, array(
+            'action' => $this->generateUrl('facture_create'),
             'method' => 'POST',
         ));
 
@@ -139,15 +120,15 @@ class ClientController extends Controller
     }
 
     /**
-     * Displays a form to create a new Client entity.
+     * Displays a form to create a new Facture entity.
      *
-     * @Route("/new", name="client_new")
+     * @Route("/new", name="facture_new")
      * @Method("GET")
      * @Template()
      */
     public function newAction()
     {
-        $entity = new Client();
+        $entity = new Facture();
         $form   = $this->createCreateForm($entity);
 
         return array(
@@ -157,9 +138,9 @@ class ClientController extends Controller
     }
 
     /**
-     * Finds and displays a Client entity.
+     * Finds and displays a Facture entity.
      *
-     * @Route("/{id}/show", name="client_show")
+     * @Route("/{id}", name="facture_show")
      * @Method("GET")
      * @Template()
      */
@@ -167,10 +148,10 @@ class ClientController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AnisCommerceBundle:Client')->find($id);
+        $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Client entity.');
+            throw $this->createNotFoundException('Unable to find Facture entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -182,9 +163,9 @@ class ClientController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Client entity.
+     * Displays a form to edit an existing Facture entity.
      *
-     * @Route("/{id}/edit", name="client_edit")
+     * @Route("/{id}/edit", name="facture_edit")
      * @Method("GET")
      * @Template()
      */
@@ -192,10 +173,10 @@ class ClientController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AnisCommerceBundle:Client')->find($id);
+        $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Client entity.');
+            throw $this->createNotFoundException('Unable to find Facture entity.');
         }
 
         $editForm = $this->createEditForm($entity);
@@ -209,16 +190,16 @@ class ClientController extends Controller
     }
 
     /**
-    * Creates a form to edit a Client entity.
-    *
-    * @param Client $entity The entity
-    *
-    * @return \Symfony\Component\Form\Form The form
-    */
-    private function createEditForm(Client $entity)
+     * Creates a form to edit a Facture entity.
+     *
+     * @param Facture $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createEditForm(Facture $entity)
     {
-        $form = $this->createForm(new ClientType(), $entity, array(
-            'action' => $this->generateUrl('client_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new FactureType(), $entity, array(
+            'action' => $this->generateUrl('facture_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
@@ -227,20 +208,20 @@ class ClientController extends Controller
         return $form;
     }
     /**
-     * Edits an existing Client entity.
+     * Edits an existing Facture entity.
      *
-     * @Route("/{id}", name="client_update")
+     * @Route("/{id}", name="facture_update")
      * @Method("PUT")
-     * @Template("AnisCommerceBundle:Client:edit.html.twig")
+     * @Template("AnisCommerceBundle:Facture:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AnisCommerceBundle:Client')->find($id);
+        $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Client entity.');
+            throw $this->createNotFoundException('Unable to find Facture entity.');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -250,7 +231,7 @@ class ClientController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('client_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('facture_edit', array('id' => $id)));
         }
 
         return array(
@@ -260,9 +241,9 @@ class ClientController extends Controller
         );
     }
     /**
-     * Deletes a Client entity.
+     * Deletes a Facture entity.
      *
-     * @Route("/{id}", name="client_delete")
+     * @Route("/{id}", name="facture_delete")
      * @Method("DELETE")
      */
     public function deleteAction(Request $request, $id)
@@ -270,23 +251,23 @@ class ClientController extends Controller
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
-//        if ($form->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('AnisCommerceBundle:Client')->find($id);
+            $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
             if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Client entity.');
+                throw $this->createNotFoundException('Unable to find Facture entity.');
             }
 
             $em->remove($entity);
             $em->flush();
-//        }
+        }
 
-        return $this->redirect($this->generateUrl('client'));
+        return $this->redirect($this->generateUrl('facture'));
     }
 
     /**
-     * Creates a form to delete a Client entity by id.
+     * Creates a form to delete a Facture entity by id.
      *
      * @param mixed $id The entity id
      *
@@ -295,10 +276,10 @@ class ClientController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('client_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('facture_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
-        ;
+            ;
     }
 }

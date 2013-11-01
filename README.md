@@ -26,4 +26,4 @@ Add to the appKernel
 	
 ### run 
     php app/console assets:install
-6) configure your database parameters
+### configure your database parameters

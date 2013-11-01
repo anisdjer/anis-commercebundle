@@ -49,6 +49,15 @@ class Produit
     /**
      * @var string
      *
+     * @ORM\Column(name="manufacturer", type="string", length=255)
+     */
+    private $manufacturer;
+
+
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="supplier", type="string", length=255)
      */
     private $supplier;
@@ -95,7 +104,7 @@ class Produit
     /**
      * @var string
      *
-     * @ORM\Column(name="photo", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
      * @Assert\File(maxSize="1024k", mimeTypes = {"image/jpeg", "image/png", "image/gif", "image/jpg"}, mimeTypesMessage = "This is a picture file")
      */
     private $photo;
@@ -106,6 +115,11 @@ class Produit
      * @ORM\Column(name="description", type="text")
      */
     private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected  $path;
 
 
     /**
@@ -185,6 +199,22 @@ class Produit
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param string $manufacturer
+     */
+    public function setManufacturer($manufacturer)
+    {
+        $this->manufacturer = $manufacturer;
+    }
+
+    /**
+     * @return string
+     */
+    public function getManufacturer()
+    {
+        return $this->manufacturer;
     }
 
     /**
@@ -331,7 +361,7 @@ class Produit
      * @param string $picture
      * @return Produit
      */
-    public function setPicture($picture)
+    public function setPhoto($picture)
     {
         $this->photo = $picture;
     
@@ -343,7 +373,7 @@ class Produit
      *
      * @return string 
      */
-    public function getPicture()
+    public function getPhoto()
     {
         return $this->photo;
     }
@@ -359,6 +389,28 @@ class Produit
         $this->description = $description;
     
         return $this;
+    }
+
+    /**
+     * Set path
+     *
+     * @param string $path
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -385,14 +437,16 @@ class Produit
     protected function getUploadRootDir()
     {
         // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
-        return __DIR__.'/../../../../../web/'.$this->getUploadDir();
+
+        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+
     }
 
     protected function getUploadDir()
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
         // le document/image dans la vue.
-        return 'uploads/commerce/products/photos';
+        return './uploads/aniscommerce/products/photos';
     }
 
     /**
@@ -404,6 +458,7 @@ class Produit
         if (null !== $this->photo) {
             // faites ce que vous voulez pour générer un nom unique
             $this->path = sha1(uniqid(mt_rand(), true)).'.'.$this->photo->guessExtension();
+
         }
     }
 
@@ -436,4 +491,29 @@ class Produit
         }
     }
     /************************************************************************/
+    public function toArray()
+    {
+        $attributes = array();
+        if($this->reference!= NULL)
+            $attributes["reference"] = $this->reference;
+        if($this->name!= NULL)
+            $attributes["name"] = $this->name;
+        if($this->manufacturer!= NULL)
+            $attributes["manufacturer"] = $this->manufacturer;
+        if($this->supplier!= NULL)
+            $attributes["supplier"] = $this->supplier;
+        if($this->category!= NULL)
+            $attributes["category"] = $this->category;
+        if($this->stock!= NULL)
+            $attributes["stock"] = $this->stock;
+        if($this->discountValue!= NULL)
+            $attributes["discountValue"] = $this->discountValue;
+        if($this->price!= NULL)
+            $attributes["price"] = $this->price;
+        if($this->path!= NULL)
+            $attributes["path"] = $this->getWebPath();
+        else
+            $attributes["path"] = "path";
+        return $attributes;
+    }
 }
