@@ -13,13 +13,7 @@
             "name": "Anis"
         }
     ],
-    "require": {
-        "php": ">=5.3.2",
-        "symfony/form": "~2.1",
-        "symfony/framework-bundle": "~2.1",
-        "symfony/security": "~2.1",
-        "symfony/twig-bundle": "~2.1",
-        "doctrine/doctrine-bundle": "dev-master",
+    "require": { 
         "anisdjer/anis-commercebundle" : "dev-master"
     },
     "suggest": { 
