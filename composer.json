@@ -1,6 +1,6 @@
 {
     "name": "anisdjer/anis-commercebundle",
-    "type": "symfony-bundle",
+    "type": "git",
     "description": "My test application.", 
     "homepage": "https://github.com/anisdjer/anis-commercebundle",
     "license": "MIT",
