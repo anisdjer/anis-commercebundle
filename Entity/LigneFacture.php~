@@ -49,6 +49,12 @@ class LigneFacture
      */
     private $discount;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Anis\CommerceBundle\Entity\Facture" , inversedBy="lines",cascade={"all"})
+     * @ORM\JoinColumn(name="facture", referencedColumnName="id", nullable=false)
+     */
+    private $facture;
+
 
     /**
      * Get id
@@ -98,7 +104,7 @@ class LigneFacture
     /**
      * Get product
      *
-     * @return Prduit
+     * @return Produit
      */
     public function getProduct()
     {
@@ -149,5 +155,27 @@ class LigneFacture
     public function getDiscount()
     {
         return $this->discount;
+    }
+    /**
+     * Set discount
+     *
+     * @param float $facture
+     * @return LigneFacture
+     */
+    public function setFacture($facture)
+    {
+        $this->facture = $facture;
+
+        return $this;
+    }
+
+    /**
+     * Get facture
+     *
+     * @return float
+     */
+    public function getFacture()
+    {
+        return $this->facture;
     }
 }

@@ -1,45 +1,145 @@
-{% extends '::base.html.twig' %}
+{% extends "AnisCommerceBundle::base_layout.html.twig" %}
+{% block title %}
+    <title>Produits</title>
+{% endblock %}
+{% block style %}
+    <style xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+        .art-content .art-postcontent-0 .layout-item-0 { margin-bottom: 5px;  }
+        .art-content .art-postcontent-0 .layout-item-1 { color: #404040; border-spacing: 10px 0px; border-collapse: separate;  }
+        .art-content .art-postcontent-0 .layout-item-2 { color: #292929; background: #C3D3E4; padding: 10px; vertical-align: top; border-radius: 40px;  }
 
-{% block body -%}
-    <h1>LigneFacture list</h1>
+        .entities tr.entite {background-color: #61dd5b;}
+        .entities tr.entite:nth-child(4n+1) {background-color: #44aa66;}
 
-    <table class="records_list">
-        <thead>
+        th, td {min-width: 50px; width: auto}
+    </style>
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/anis.popup.js') }}" ></script>
+    <link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/anis.popup.css') }}" />
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/custom.anis.functions.js') }}" ></script>
+{% endblock %}
+{% block menu %}
+{% endblock%}
+{% block content %}
+    <form action="" method="get">
+        <table class="art-article entities" style="box-shadow: 5px 5px 1px #222;border-radius: 20px ;background-color: #E6E6E6 ;width: 100%;">
+            <tbody>
+
             <tr>
-                <th>Id</th>
-                <th>Quantity</th>
-                <th>Unityprice</th>
-                <th>Discount</th>
-                <th>Actions</th>
+                <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10"><span style="font-weight: bold; font-size: 16px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;"><center>Produits</center></span><br></td>
             </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('lignefacture_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.quantity }}</td>
-                <td>{{ entity.unityPrice }}</td>
-                <td>{{ entity.discount }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('lignefacture_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('lignefacture_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
+                <th style=" width: 20px; " rowspan="2">  </th>
+                <th style=" ">R&eacute;ference</th>
+                <th style=" ">Nom</th>
+                <th style=" ">Usine</th>
+                <th style=" ">Fournisseur</th>
+                <th style=" ">Cat&eacute;gorie</th>
+                <th style=" ">Stock</th>
+                <th style=" ">Prix Sans Remise</th>
+                <th style=" ">Remise</th>
+                <th style=" ">Prix avec Remise</th>
+                <td> <a class="art-button submit" ><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;vertical-align: middle">Valider</span></a></td>
+            </tr>
+            <tr>
+                <th><input type="text" class="search reference" placeholder="Ref"/></th>
+                <th><input type="text" class="search name" placeholder="Nom"/></th>
+                <th><input type="text" class="search manufacturer" placeholder="Usine"/></th>
+                <th><input type="text" class="search supplier" placeholder="Fournisseur"/></th>
+                <th><input type="text" class="search category" placeholder="Categorie"/></th>
+                <th><input type="number" style="width: 70px;height: 20px" min=0 class="search stock" placeholder="Stock" /></th>
+                <th><input type="number"  step="5" style="width: 70px;height: 20px" min=0 class="search price" placeholder="Prix" /></th>
+                <th><input type="number" max="100" min="0" step="5" style=" height: 20px" class="search discountValue" placeholder="Remise"/></th>
+                <th></th>
+                <td style="width: 50px; vertical-align: middle; text-align: right; border-right-width: 0; border-bottom-width: 0; border-left-width: 0;">
+                    <!--<a href="{{ path("produit_new") }}" class="art-button"><span style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Export</span></a>-->
+                    <a class="art-button"><span  onclick="search('{{ path('produit_search') }}',['reference', 'name', 'manufacturer', 'supplier', 'category', 'stock', 'discountValue', 'price', 'path'], {'path' : '{{ asset('bundles/aniscommerce/images/produit_default.png')}}' , callback : function(x){ mycallback(x); } } );" style="text-shadow: rgba(23, 23, 23, 0.496094) 0 -1px 0;">Recherche</span></a>
                 </td>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <tr style="height: 0 !important; max-height: 2px !important;background-color: #636363"><td colspan="10" ></td></tr>
+            {% for entity in entities %}
 
-        <ul>
-        <li>
-            <a href="{{ path('lignefacture_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+                <tr class="entite" style="border-radius: 20px ;">
+                    <td class="id" style="display: none">{{ entity.id }}</td>
+                    <td  style="text-align: center; vertical-align: middle;width: 20px !important;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                                <span class="path">
+                                   <img style="width: 50px; height : 50px" src="{% if entity.path %}{{ asset('uploads/aniscommerce/products/photos/'~entity.path)}} {% else %} {{ asset('bundles/aniscommerce/images/produit_default.png')}} {% endif %}" width="50" height="50" />
+                                </span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="reference" >{{ entity.reference }}</span>
+
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;   border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+                        <span class="name" >{{ entity.name }}</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="manufacturer" >{{ entity.manufacturer }}</span>
+                    </td>
+
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="supplier" >{{ entity.supplier }}</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="category" > {{ entity.category }}</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="stock">{{ entity.stock }}</span>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="price" >{{ entity.price }}</span> DTT
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                        <span class="discountValue" >{{ entity.discountValue }}</span>%
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
+                        <span class="pricefinalunity">{{ entity.price - ( entity.price * entity.discountValue/100) }}</span> DTT
+                    </td>
+                    <td style="width: 200px; vertical-align: middle; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;">
+
+                                    <input class="check" type="checkbox" value="{{ entity.id }}" />
+
+                    </td>
+                </tr>
+
+                <tr style="height: 0px !important; max-height: 2px !important;background-color: #636363"><td colspan="10" ></td></tr>
+
+            {% endfor %}
+
+            <tr class="entitiesfooter">
+                <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10">
+                    <span style="font-weight: bold; font-size: 10px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;">
+                        <center>{% if page > 1 %}<a href="{{ path('client1', {page : page-1}) }}" class="art-button"  > < Previous</a>{% endif %} &nbsp;&nbsp; page {{ page }}/{{ pages }} &nbsp;&nbsp; {% if page < pages %}<a href="{{ path('client1', {page : page+1}) }}" class="art-button"  >Next >{% endif %}</a></center>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <script type="text/javascript">
+
+        function mycallback(x)
+        {
+            var price = parseFloat($(x).find(".price")[0].innerHTML);
+            //console.log(price);
+            var discount = parseFloat($(x).find(".discountValue")[0].innerHTML);
+            //console.log(discount);
+            var priceFinal = $(x).find(".pricefinalunity")[0];
+            console.log(priceFinal);
+            priceFinal.innerHTML = "" + String( price - ( price * discount / 100 ));
+        }
+    </script>
+
+{% endblock %}
+
+
+{% block copyright %}
+{% endblock %}

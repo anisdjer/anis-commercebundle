@@ -1,16 +1,131 @@
-{% extends '::base.html.twig' %}
+{% extends "AnisCommerceBundle::base_layout.html.twig" %}
 
-{% block body -%}
-    <h1>Produit edit</h1>
+{% block style %}
 
-    {{ form(edit_form) }}
+    {{ parent() }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('produit') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+<style>
+    .art-content .art-postcontent-0 .layout-item-2 { color: #292929; background: #C3D3E4; padding: 10px; vertical-align: top; border-radius: 40px;  }
+    .ie7 .ie6 .post .layout-cell {border:none !important; padding:0 !important; }
+
+    input
+    {
+    border-radius: 20px;
+    text-align: center;
+    }
+    tr , td, th{
+    border: hidden;
+    text-align: left;
+    }
+</style>
+
 {% endblock %}
+{% block content %}
+
+    {#<form action="{{ path('produit_edit' ) }}" method="post" {{ form_enctype(edit_form) }}>#}
+{{ form_start(edit_form) }}
+        {{ form_widget(edit_form._token) }}
+
+        <div class="art-layout-cell layout-item-2" style="width: 50%" >
+            <table class="art-article" style="box-shadow: 5px 5px 1px #222;border-radius: 20px ;background-color: #E6E6E6 ;width: 80%;margin-left: 10%">
+                <tr>
+                    <td colspan="10" style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10"><span style="font-weight: bold; font-size: 16px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;">
+                        <center>Modifier le Produit</center>
+                    </span>
+                        <br>
+                    </td>
+                </tr>
+
+
+                <tr style="width: 30%">
+                    <td style="max-width: 150px;width: 150px !important;" colspan="1">
+                        <center>
+                            <img src="{% if edit_form.vars.data.webpath %}{{ asset(edit_form.vars.data.webpath) }}{% else %} {{ asset('bundles/aniscommerce/images/produit_default.png') }}{% endif %}" width="100" height="100" />
+                            <br>
+                            <div style="display: none">
+                                {{ form_widget(edit_form.photo, { 'attr': {'class': 'photo'} }) }}
+                            </div>
+                            <a style="margin-left: 10px;width: 50px" class="art-button" onclick="$('.photo').click();">Photo</a>
+
+                        </center>
+                    </td>
+
+                    <td>
+                        <table style="width: 100%;height: 100%;border: hidden">
+                            <tr>
+                                <th>
+                                    <label>R&eacute;f&eacute;rence<span style="color: red">*</span></label>
+                                    {{ form_widget (edit_form.reference) }}
+                                </th>
+                                <th>
+                                    <label>Titre</label>
+                                    {{ form_widget(edit_form.name) }}
+                                </th>
+                                <th >
+                                    <label>Cat&eacute;gorie</label>
+                                    {{ form_widget(edit_form.category) }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label>Prix</label>
+                                    {{ form_widget (edit_form.price) }}
+                                </th>
+                                <th >
+                                    <label>Usine</label>
+                                    {{ form_widget (edit_form.manufacturer) }}
+                                </th>
+                                <th>
+                                    <label>Fournisseur</label>
+                                    {{ form_widget(edit_form.supplier) }}
+                                </th>
+                            </tr>
+
+                            <tr>
+                                {#  <th colspan="1" style="text-align: left;">
+                                      <label>discounted</label>
+                                      {{ form_widget (edit_form.discounted) }}
+                                  </th>#}
+                                <th >
+                                    <label>Remise</label>
+                                    {{ form_widget (edit_form.discountValue) }}
+                                </th>
+                                <th  style="text-align: left">
+                                    <label>Fin de remise</label>
+                                    {{ form_widget(edit_form.dateDiscountEnd) }}
+                                </th>
+                                <th  style="text-align: left; width: 50%">
+                                    <label>Stock</label>
+                                    {{ form_widget (edit_form.stock) }}
+                                </th>
+                            </tr>
+
+                            <tr>
+                                <th style="text-align: left;" colspan="10">
+                                    <label>Description</label>
+                                    {{ form_widget(edit_form.description , { 'attr': {'style' : "margin: 0px; height: 32px; min-width: 95%;max-width: 95%;min-height: 100px;border-radius: 20px;padding: 10px" } }) }}
+                                </th>
+                            </tr>
+                            {#<tr><th style="text-align: left; width: 50%"><label>Age<span style="color: red">*</span></label>{{ form_widget (edit_form.age) }}</th><th style="text-align: left"><label>Verification Password<span style="color: red">*</span></label><input type="password" required="required"/></th></tr>#}
+                        </table>
+                    </td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <button class="art-button" style="border: hidden;background-color: #2e8b57;color: #009933;float: right" type="submit">
+                            Sauvegarder
+                        </button>
+                    </td>
+                </tr>
+            </table>
+
+            <div style="visibility: hidden" >
+                {{ form_widget(edit_form) }}
+            </div>
+
+    {{ form_end(edit_form) }}
+
+{% endblock %}
+

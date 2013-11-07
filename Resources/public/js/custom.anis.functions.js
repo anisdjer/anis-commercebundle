@@ -39,10 +39,12 @@ function deleteUser(url , sender_)
 
 function search(url, metaField, options){
 
-    options = jQuery.extend({}, search.prototype.options, options || {});
+    var context = this;
+    context.options = jQuery.extend({}, search.prototype.options, options || {});
 
     var values = {} ;
-    var target = $($(".entity:first")[0]);
+    var target = $($(".entite:first")[0]);
+    console.log(target);
     var delim = $(target).next();
     var footer = $('.entitiesfooter');
 
@@ -59,18 +61,18 @@ function search(url, metaField, options){
             type: "POST",
             data : values,
             success : function(resp){
-                console.log(resp);
+                //console.log(resp);
 
                 //var data = JSON.parse(resp);
                 var data =  resp; // le retour est de type JSON
-                $(".entity").next().remove();
-                $(".entity").remove();
+                $(".entite").next().remove();
+                $(".entite").remove();
 
                 data.forEach(function(client, i){
 
 
-                    var show_ = target.find(".art-button.show")[0];
-                    var edit_ = target.find(".art-button.edit")[0];
+                    var show_   = target.find(".art-button.show")[0];
+                    var edit_   = target.find(".art-button.edit")[0];
                     var delete_ = target.find(".art-button.delete")[0];
 
                     var t;
@@ -78,31 +80,50 @@ function search(url, metaField, options){
                     metaField.forEach(function(value, index){
                         t=  target.find("."+value)[0];
 
+
+
                         if(value == "path")
                         {
-                            t.innerHTML = "<img src='"+options.path+"' />";
+                            t.innerHTML = "<img style='width: 50px; height:50px' src='"+context.options.path+"' />";
                             if(client[value] != "path")
-                                t.innerHTML = "<img width='50px' height='50px' src='../../../" + client[value] + "' />";
-                        }else if(client[value] ){
+                                t.innerHTML = "<img style='width: 50px; height:50px' src='../../../" + client[value] + "' />";
+                        }else if(client[value] != 'undefined' ){
+                            //console.log(t);
+                            //console.log(value);
                             t.innerHTML = client[value];
                         }
                     });
 
+                    if(show_) show_.href = client["showURL"];
+                    if(edit_)edit_.href = client["editURL"];
+                    if(delete_)delete_.onclick = "deleteUser('" + client['deleteURL'] +"', this)";
 
-                    show_.href = client["showURL"];
-                    edit_.href = client["editURL"];
-                    delete_.href = client["deleteURL"];
 
+
+                    context.options.callback(target);
 
                     target.clone().insertBefore(footer);
                     delim.clone().insertBefore(footer);
+
+
+
                 });
+
+
+            },
+            done: function (x){
+
             }
         });
+
 }
 search.prototype = {
 
     options: {
-        path : ""
+        path : "",
+        callback: function(x){
+        }
     }
 }
+
+

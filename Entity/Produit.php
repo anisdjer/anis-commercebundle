@@ -62,12 +62,6 @@ class Produit
      */
     private $supplier;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="discounted", type="boolean")
-     */
-    private $discounted;
 
     /**
      * @var string
@@ -240,28 +234,6 @@ class Produit
         return $this->supplier;
     }
 
-    /**
-     * Set discounted
-     *
-     * @param boolean $discounted
-     * @return Produit
-     */
-    public function setDiscounted($discounted)
-    {
-        $this->discounted = $discounted;
-    
-        return $this;
-    }
-
-    /**
-     * Get discounted
-     *
-     * @return boolean 
-     */
-    public function getDiscounted()
-    {
-        return $this->discounted;
-    }
 
     /**
      * Set discountValue
@@ -494,26 +466,23 @@ class Produit
     public function toArray()
     {
         $attributes = array();
-        if($this->reference!= NULL)
-            $attributes["reference"] = $this->reference;
-        if($this->name!= NULL)
-            $attributes["name"] = $this->name;
-        if($this->manufacturer!= NULL)
-            $attributes["manufacturer"] = $this->manufacturer;
-        if($this->supplier!= NULL)
-            $attributes["supplier"] = $this->supplier;
-        if($this->category!= NULL)
-            $attributes["category"] = $this->category;
-        if($this->stock!= NULL)
-            $attributes["stock"] = $this->stock;
-        if($this->discountValue!= NULL)
-            $attributes["discountValue"] = $this->discountValue;
-        if($this->price!= NULL)
-            $attributes["price"] = $this->price;
-        if($this->path!= NULL)
-            $attributes["path"] = $this->getWebPath();
-        else
-            $attributes["path"] = "path";
+            $attributes["reference"] = $this->reference ? $this->reference : "--";
+            $attributes["name"] = $this->name ? $this->name : '--';
+            $attributes["manufacturer"] = $this->manufacturer ? $this->manufacturer : '--';
+            $attributes["supplier"] = $this->supplier ? $this->supplier : '--';
+            $attributes["category"] = $this->category ? $this->category : '--';
+            $attributes["stock"] = $this->stock >= 0 ? $this->stock : '--';
+            $attributes["discountValue"] = $this->discountValue>=0 ? $this->discountValue : '--';
+            $attributes["price"] = $this->price >=0 ? $this->price : '--';
+            $attributes["path"] = $this->path ? $this->getWebPath() : "path";
+//        if($this->path!= NULL)
+//            $attributes["path"] = $this->getWebPath();
+//        else
+//            $attributes["path"] = "path";
         return $attributes;
+    }
+    public function __toString()
+    {
+        return $this->getReference();
     }
 }

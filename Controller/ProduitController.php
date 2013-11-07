@@ -37,10 +37,24 @@ class ProduitController extends Controller
         $query = $em->createQuery('SELECT COUNT(u.id) FROM AnisCommerceBundle:Produit u');
         $count = $query->getSingleScalarResult();
 
+        /*$html = $this->renderView('AnisCommerceBundle:Produit:index.html.twig',
+            array('entities' => $entities,
+                'page' => $page,
+                'pages' => ($count - ($count % 10) ) / 10 + 1
+            ));
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf'
+
+            ));*/
+
         return array(
             'entities'  => $entities,
             'page' => $page,
-            'pages' => ($count - ($count % 10) ) / 10 + 1
+            'pages' => (($count - 1)  - (($count - 1) % 10) ) / 10 + 1
         );
     }
 
@@ -60,7 +74,7 @@ class ProduitController extends Controller
         foreach($query as $produit){
 
             $produitArray = $produit->toArray();
-            $produitArray["showURL"] = $this->generateUrl("produit_show", array('id' => $produit->getId()));
+//            $produitArray["showURL"] = $this->generateUrl("produit_show", array('id' => $produit->getId()));
             $produitArray["editURL"] = $this->generateUrl("produit_edit", array('id' => $produit->getId()));
             $produitArray["deleteURL"] = $this->generateUrl("produit_delete", array('id' => $produit->getId()));
 
@@ -92,7 +106,7 @@ class ProduitController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('produit_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('produit'));
         }
 
         return array(
@@ -138,30 +152,6 @@ class ProduitController extends Controller
         );
     }
 
-    /**
-     * Finds and displays a Produit entity.
-     *
-     * @Route("/{id}/show", name="produit_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AnisCommerceBundle:Produit')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Produit entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
 
     /**
      * Displays a form to edit an existing Produit entity.

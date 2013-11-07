@@ -22,7 +22,7 @@ class MainRepository extends EntityRepository
      * @param $page
      * @return array
      */
-    public function findAllLimited($page)
+    public function findAllLimited($page, $criteria = array())
     {
 
         $min =($page > 0 ? ($page-1) * 10 : 0);
@@ -31,6 +31,15 @@ class MainRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('i');
         $qb->setFirstResult($min)->setMaxResults($max);
+
+        foreach ($criteria as $field => $value) {
+            if (!$this->getClassMetadata()->hasField($field)) {
+                continue;
+            }
+
+            $qb ->andWhere($qb->expr()->eq('i.'.$field, ':i_'.$field))
+                ->setParameter('i_'.$field, $value);
+        }
 
         return  $qb->getQuery()->getResult();
     }

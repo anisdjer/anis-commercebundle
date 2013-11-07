@@ -62,12 +62,6 @@ class Produit
      */
     private $supplier;
 
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="discounted", type="boolean")
-     */
-    private $discounted;
 
     /**
      * @var string
@@ -240,28 +234,6 @@ class Produit
         return $this->supplier;
     }
 
-    /**
-     * Set discounted
-     *
-     * @param boolean $discounted
-     * @return Produit
-     */
-    public function setDiscounted($discounted)
-    {
-        $this->discounted = $discounted;
-    
-        return $this;
-    }
-
-    /**
-     * Get discounted
-     *
-     * @return boolean 
-     */
-    public function getDiscounted()
-    {
-        return $this->discounted;
-    }
 
     /**
      * Set discountValue

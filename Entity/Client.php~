@@ -73,12 +73,7 @@ class Client
      */
     private $lastVisit;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nameTitle", type="string", length=4)
-     */
-    private $nameTitle;
+
 
     /**
      * @var string
@@ -103,7 +98,7 @@ class Client
     /**
      * @var string
      *
-     * @ORM\Column(name="tel", type="string", length=8)
+     * @ORM\Column(name="tel", type="string", length=8, nullable=true)
      */
     private $tel;
 
@@ -112,6 +107,8 @@ class Client
 
 
 
+    public function __construct(){
+    }
 
     /**
      * Get id
@@ -284,28 +281,6 @@ class Client
         return $this->lastVisit;
     }
 
-    /**
-     * Set nameTitle
-     *
-     * @param string $nameTitle
-     * @return Client
-     */
-    public function setNameTitle($nameTitle)
-    {
-        $this->nameTitle = $nameTitle;
-    
-        return $this;
-    }
-
-    /**
-     * Get nameTitle
-     *
-     * @return string 
-     */
-    public function getNameTitle()
-    {
-        return $this->nameTitle;
-    }
 
     /**
      * Set gender
@@ -403,4 +378,5 @@ class Client
             $attributes["tel"] = $this->tel;
         return $attributes;
     }
+
 }

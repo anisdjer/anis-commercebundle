@@ -21,6 +21,7 @@ function Anis(data, options) {
       if(_this.options.closeButton) {
         var close = jQuery('<span class="anis-closebtn"></span>');
         close.bind('click', function() {
+            _this.options.onClose();
           _this.hide();
         });
 
@@ -63,6 +64,7 @@ function Anis(data, options) {
     if(_this.options.closeButton) {
       var close = jQuery('<span class="anis-closebtn"></span>');
       close.bind('click', function() {
+          _this.options.onClose();
         _this.hide();
       });
 
@@ -80,6 +82,7 @@ function Anis(data, options) {
 
   if(_this.options.autoclose != null) {
     setTimeout(function(_this) {
+        _this.options.onClose();
       _this.hide();
     }, _this.options.autoclose, this);
   };
@@ -96,6 +99,7 @@ Anis.prototype = {
     callback: null,                          // callback function after close message
     center: true,                            // center message on screen
     closeButton: true,                       // show close button in header title (or content if buttons array is empty).
+    onClose : function(){},
     height: 'auto',                          // content height
     title: null,                             // message title
     titleClass: null,                        // title style: info, warning, success, error

@@ -21,19 +21,35 @@ class LigneFactureController extends Controller
     /**
      * Lists all LigneFacture entities.
      *
+     * @Route("/{page}", name="lignefacture1", requirements={"page" = "\d+"})
      * @Route("/", name="lignefacture")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($page = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AnisCommerceBundle:LigneFacture')->findAll();
 
         return array(
             'entities' => $entities,
+        );*/
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('AnisCommerceBundle:Produit')->findAllLimited($page, array('quantity', ' != 0'));
+
+
+        $query = $em->createQuery('SELECT COUNT(u.id) FROM AnisCommerceBundle:Produit u');
+        $count = $query->getSingleScalarResult();
+
+        return array(
+            'entities'  => $entities,
+            'page' => $page,
+            'pages' => (($count - 1)  - (($count - 1) % 10) ) / 10 + 1
         );
+
     }
     /**
      * Creates a new LigneFacture entity.

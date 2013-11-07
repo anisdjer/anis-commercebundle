@@ -8,12 +8,12 @@
         .art-content .art-postcontent-0 .layout-item-1 { color: #404040; border-spacing: 10px 0px; border-collapse: separate;  }
         .art-content .art-postcontent-0 .layout-item-2 { color: #292929; background: #C3D3E4; padding: 10px; vertical-align: top; border-radius: 40px;  }
 
-        tr.entity {background-color: #61dd5b;}
-        tr.entity:nth-child(4n+1) {background-color: #44aa66;}
+        tr.entite {background-color: #61dd5b;}
+        tr.entite:nth-child(4n+1) {background-color: #44aa66;}
     </style>
-    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/anis.popup.js') }}" ></script>
-    <link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/anis.popup.css') }}" />
-    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/custom.anis.functions.js') }}" ></script>
+    <script type="text/javascript" src="{{ app.request.schemeAndHttpHost ~   asset('bundles/aniscommerce/js/anis.popup.js') }}" ></script>
+    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost ~   asset('bundles/aniscommerce/css/anis.popup.css') }}" />
+    <script type="text/javascript" src="{{ app.request.schemeAndHttpHost ~   asset('bundles/aniscommerce/js/custom.anis.functions.js') }}" ></script>
 {% endblock %}
 {% block content %}
     <h1> </h1>
@@ -65,7 +65,7 @@
                                                 <tr style="height: 0 !important; max-height: 2px !important;background-color: #636363"><td colspan="10" ></td></tr>
                                                 {% for entity in entities %}
 
-                                                    <tr class="entity" style="border-radius: 20px ;">
+                                                    <tr class="entite" style="border-radius: 20px ;">
                                                         <td  style="text-align: center; vertical-align: middle;width: 20px !important;  border-top-width: 0px; border-right-width: 2px; border-bottom-width: 0px; border-left-width: 0px;">
                                                              <ul>
 
@@ -104,9 +104,9 @@
                                                             <table class="art-article" style="border-radius: 20px ;margin-left: auto;">
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; width: 50%;"><a href="{{ path('client_show' , {'id': entity.id}) }}" class="art-button show"><img width="16px" title="details" src="{{ asset("bundles/aniscommerce/images/voir.png") }}" /></a></td>
-                                                                    <td style="width: 68px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a href="{{ path('client_edit' , {'id': entity.id}) }}" class="art-button edit"><img width="16px" title="edit" src="{{ asset("bundles/aniscommerce/images/edit.png") }}" /></a></td>
-                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a onclick="deleteUser('{{ path('client_delete' , { 'id' : entity.id}) }}' , this);" class="art-button delete"><img width="16px" title="delete" src="{{ asset("bundles/aniscommerce/images/supprimer.png") }}" /></a></td>
+                                                                    {#<td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; width: 50%;"><a href="{{ path('client_show' , {'id': entity.id}) }}" class="art-button show"><img width="16px" title="details" src="{{ asset("bundles/aniscommerce/images/voir.png") }}" /></a></td>#}
+                                                                    <td style="width: 68px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a href="{{ path('client_edit' , {'id': entity.id}) }}" class="art-button edit"><img width="16px" title="edit" src="{{ app.request.schemeAndHttpHost ~   asset("bundles/aniscommerce/images/edit.png") }}" /></a></td>
+                                                                    <td style="text-align: right; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"><a onclick="deleteUser('{{ path('client_delete' , { 'id' : entity.id}) }}' , this);" class="art-button delete"><img width="16px" title="delete" src="{{ app.request.schemeAndHttpHost ~   asset("bundles/aniscommerce/images/supprimer.png") }}" /></a></td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>

@@ -22,15 +22,16 @@
     <script src="{{ asset('bundles/aniscommerce/js/script.responsive.js') }}"></script>
 
 
+    {% block style %}
     <style>
-        {% block style %}
         .art-content .art-postcontent-0 .layout-item-0 { color: #DBDBDB; background: #333333; padding: 10px;  }
         .art-content .art-postcontent-0 .layout-item-1 { color: #D4D4D4; background: #555555; padding: 10px;  }
         .art-content .art-postcontent-0 .layout-item-2 { padding: 20px;  }
         .ie7 .post .layout-cell {border:none !important; padding:0 !important; }
         .ie6 .post .layout-cell {border:none !important; padding:0 !important; }
-        {% endblock %}
+
     </style>
+    {% endblock %}
 </head>
 <body>
 <div id="art-main">
@@ -40,7 +41,7 @@
             <li>
 
                 <a href="{{ path('produit')}}"
-                        {% if app.request.attributes.get('_route') in [ "produit" , "produit_new" ] %}
+                        {% if app.request.attributes.get('_route') in [ "produit" , "produit_new", "produit_edit" ] %}
                             class="active"
                         {% endif %}
                     >
@@ -48,7 +49,7 @@
             </li>
             <li>
                 <a href="{{ path('client')}}"
-                   {% if app.request.attributes.get('_route')  in ["client" ,"client1", "client_new" ]%}
+                   {% if app.request.attributes.get('_route')  in ["client" ,"client1", "client_new", "client_edit" ]%}
                        class="active"
                     {% endif %}
                     >
@@ -56,7 +57,7 @@
             </li>
             <li>
                 <a href="{{ path('facture')}}"
-                   {% if app.request.attributes.get('_route')  in ["facture" , "facture_new" ] %}
+                   {% if app.request.attributes.get('_route')  in ["facture", "facture1" , "facture_new", "facture_edit" ] %}
                     class="active"
                     {% endif %}
                     >

@@ -1,15 +1,271 @@
+{#
 {% extends '::base.html.twig' %}
 
 {% block body -%}
-    <h1>Facture creation</h1>
+    <h1>Client creation</h1>
 
     {{ form(form) }}
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('facture') }}">
+        <a href="{{ path('client') }}">
             Back to the list
         </a>
     </li>
 </ul>
+{% endblock %}
+#}
+
+{% extends "AnisCommerceBundle::base_layout.html.twig" %}
+
+{% block style %}
+
+    {{ parent() }}
+    <style xmlns="http://www.w3.org/1999/html">
+        .art-content .art-postcontent-0 .layout-item-0 { margin-bottom: 5px;  }
+        .art-content .art-postcontent-0 .layout-item-1 { color: #404040; border-spacing: 10px 0px; border-collapse: separate;  }
+        .art-content .art-postcontent-0 .layout-item-2 { color: #292929; background: #C3D3E4; padding: 10px; vertical-align: top; border-radius: 40px;  }
+
+        .produits tr.entity {background-color: #61dd5b;}
+        .produits tr.entity:nth-child(2n+1) {background-color: #44aa66;}
+        .delete {
+            background-color: red; color: white; font-size: 15pt; border-radius: 10px; width : 15px; cursor: pointer; padding: 5px; float : right
+        }
+    input
+    {
+    border-radius: 20px;
+    text-align: center;
+    }
+    tr , td, th{
+        border: hidden;
+        text-align: left;
+    }
+
+        th, td{
+            vertical-align: middle; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px; text-align: center;
+            width: inherit;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('bundles/aniscommerce/css/anis.popup.css') }}">
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/classes/LigneFacture.js') }}" ></script>
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/classes/Facture.js') }}" ></script>
+{% endblock %}
+{% block content %}
+
+<form action="{{ path('facture_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form._token) }}
+                                    <div class="art-content-layout-row">
+                                        <div class="art-layout-cell layout-item-2" style="width: 50%" >
+                                            <table class="art-article" style="box-shadow: 5px 5px 1px #222;border-radius: 20px ;background-color: #E6E6E6 ;width: 80%;margin-left: 10%">
+                                                <tr>
+                                                    <td style="word-spacing: 4px; line-height: 150%; text-align: left; margin-top: 15px; margin-bottom: 15px; vertical-align: middle; width: 50%; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-radius: 40px;background-color: #ffffff; padding: 20px" colspan="10"><span style="font-weight: bold; font-size: 18px; color: rgb(13, 53, 15); text-shadow: rgba(60, 23, 23, 0.496094) 0 -1px 0;;"><center>Nouvelle Facture</center></span><br></td>
+                                                </tr>
+                                                <tr style="width: 30%">
+
+                                                    <td>
+                                                        <table style="width: 100%;height: 100%;border: hidden">
+                                                            <tr>
+                                                                <th>
+                                                                    <label>Date Facturation</label>
+                                                                    {{ form_widget (form.dateFacturation, { 'attr': {'class': 'dateFacturation'} }) }}
+                                                                </th>
+                                                                <th >
+                                                                    <label>Date Paiement</label>
+                                                                    {{ form_widget(form.datePaiement, { 'attr': {'class': 'datePaiement'} }) }}
+                                                                </th>
+                                                                <th >
+                                                                    <label>M&eacute;thode de Paiement</label>
+                                                                    {{ form_widget(form.methodPaiement, { 'attr': {'class': 'methodPaiement'} }) }}
+                                                                </th>
+                                                                <th >
+                                                                    <label>Client</label>
+                                                                    {{ form_widget(form.client , { 'attr': {'class': 'client'} }) }}
+                                                                </th>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <th colspan="10" style="background-color: #1f6377; color: white; font-size: 14pt; font-family: 'Times New Roman'; height: 30px; vertical-align: middle">
+                                                                    <span style="vertical-align: middle">Lignes de facture</span>
+                                                                    <button class="art-button add-line" style="float: right; font-size: 10pt" >Ajouter une ligne de facture</button>
+                                                                </th>
+                                                            </tr>
+                                                            </table>
+                                                <table class="produits ">
+
+                                                    <tr>
+                                                        <th>  </th>
+                                                        <th>R&eacute;ference</th>
+                                                        <th>Nom</th>
+                                                        <th>Usine</th>
+                                                        <th>Fournisseur</th>
+                                                        <th>Cat&eacute;gorie</th>
+                                                        <th>Stock</th>
+                                                        <th>Prix Sans Remise</th>
+                                                        <th>Remise</th>
+                                                        <th>Prix avec Remise</th>
+                                                        <th>Prix Total</th>
+                                                        <th>Quantit&eacute;</th>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                                <div style="float: right">
+                                                    <table>
+                                                            <tr>
+                                                                <th colspan="2"></th>
+                                                                <th>
+                                                                    <label>Total</label>
+                                                                    <span> {{ form_widget(form.total, {  'attr' : { 'class' : 'total' }}) }} </span>
+                                                                </th>
+                                                                <th>
+                                                                    <label>Payée</label>
+                                                                    {{ form_widget(form.paid    , {  'attr' : { 'class' : 'paid' }}) }}
+                                                                </th>
+                                                            </tr>
+
+
+
+
+                                                    <tr><td><button class="art-button" style="border: hidden;background-color: #2e8b57;color: #009933" type="submit">Sauvegarder</button></td></tr>
+                                                </table>
+                                            </div>
+                                            </div>
+                                        </div>
+
+    </table>
+            </form>
+
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/aniscommerce/js/anis.popup.js') }}"></script>
+
+    <script type="text/javascript">
+
+        function updateTotal(){
+            var total = 0;
+
+            $(".produits .entity").each(function(index, value){
+
+                var prixUnitaire = parseFloat($(value).find(".pricefinalunity")[0].innerHTML);
+                var quantity = parseFloat($($(value).find("input[name=quantity]")[0]).val());
+                var prixFinal = $(value).find(".pricefinal")[0];
+
+
+                $(value).find(".pricefinal")[0].innerHTML = String(parseFloat(quantity * prixUnitaire));
+
+
+                total = parseFloat( total +  parseFloat($(value).find(".pricefinal")[0].innerHTML));
+                //console.log(parseFloat($(value).find(".pricefinal")[0].innerHTML));
+            });
+            $(".total").val( total );
+        }
+        $(document).ready(function(){
+            $('<div class="overlay" style="width: 100%; height: 100%; opacity: 0.5; background-color: #000000; position: absolute; z-index: 1000; top: 0; display: none "><img style="margin-left: 40%;margin-top: 20%" src="{{ asset('bundles/aniscommerce/images/loading_new.gif') }}" /> </div>').prependTo($("body"));
+
+            $(".art-button.add-line").click(function(e){
+                e.preventDefault();
+
+
+                $(".overlay").show();
+
+                $.ajax("{{ path('lignefacture') }}",
+                        {
+                            success : function(content){
+
+                                new Anis(content,{
+                                    title : "Ajouter des articles", width : "90%" , height : "90%",
+                                    onClose : function(){
+                                        $(".overlay").hide();
+                                    }
+                                });
+
+                                $(".art-button.submit").click(function(e){
+                                    e.preventDefault();
+
+                                    $("input[type=checkbox]:checked.check").each(function(index, value){
+
+
+                                        $(value).parent().parent().next().remove();
+                                        $(value).parent().parent().appendTo($(".produits"));
+                                        $(value).parent().parent().removeClass("entite").addClass("entity");
+                                        var stock = parseInt($(value).parent().parent().find(".stock")[0].innerHTML);
+                                        $(value).parent().parent().append("<td><input type='number' min='1' max='"+(stock > 0 ? stock : 1)+"' name='quantity' value='1' /></td><td><div class='delete' >X</div></td> ");
+
+                                        $(value).replaceWith("<span class='pricefinal'>0</span> DTT");
+
+                                    });
+
+                                    updateTotal();
+
+                                    $(".delete").click(function(){
+
+                                        $(this).parent().parent().remove();
+
+                                        updateTotal();
+
+                                    });
+
+                                    $("input[name=quantity]").bind('change', function(e){
+                                        var produit = $(this).parent().parent();
+
+                                        updateTotal();
+                                    });
+
+                     });
+
+
+                    }
+                });
+            });
+
+
+            $("form").submit(function(e){
+                e.preventDefault();
+
+
+
+
+                /* Récupérer les données de la factures */
+                /* Remplir la facture */
+                var client_id = $("select.client").val();
+                var dateFacturation = $(".dateFacturation").val();
+                var datePaiement = $(".datePaiement").val();
+                var methodPaiement = $(".methodPaiement").val();
+                var total = $(".total").val();
+                var paid = ($(".paid:checked").length > 0 ? 1 : 0 );
+
+
+                var facture = new Facture(client_id, dateFacturation, datePaiement, methodPaiement, total, paid);
+
+                /* Remplir es lignes de factures */
+                var lines = $(".produits tr.entity");
+                lines.each(function(index, line){
+                    var product_id = parseInt($(line).find(".id")[0].innerHTML);
+                    var unityPrice = parseFloat($(line).find(".price")[0].innerHTML);
+                    var discount = parseFloat($(line).find("span.discountValue")[0].innerHTML);
+                    var quantity = parseInt($(line).find("input[name=quantity]")[0].value);
+
+                    facture.addLine(new LigneFacture(product_id, unityPrice, quantity, discount));
+                });
+
+                console.log(facture.serialize());
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('facture_create_service') }}",
+                    data: {"facture" : facture.serialize() }
+                }).done(function( msg ) {
+                            //$("#ajaxResult").html(msg);
+                            //window.location = "http://localhost/symfony3/web/app_dev.php/PFE/V3/question/";
+                            console.log("Facture cree avec success !: " + msg);
+                            var url = "{{ path('facture') }}"+ msg + "/show.pdf";
+                            window.location = url;
+                        }).fail(function(msg){
+                            console.log("Fail to create a new Facture : " + msg);
+                        }
+                );
+            });
+        });
+
+
+</script>
+
 {% endblock %}

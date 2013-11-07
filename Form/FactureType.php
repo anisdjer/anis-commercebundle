@@ -15,15 +15,16 @@ class FactureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateFacturation')
-            ->add('datePaiement')
-            ->add('methodPaiement')
-            ->add('total')
-            ->add('paid')
+            ->add('dateFacturation','date', array('data' => new \DateTime(),'widget' => 'single_text'))
+            ->add('datePaiement','date', array('data' => new \DateTime(),'widget' => 'single_text'))
+            ->add('methodPaiement' ,"choice",  array('choices' => array('cheque' => 'cheque' , 'montant' => 'montant' )))
+            ->add('total', NULL, array('data' => 0, "read_only" => true))
+            ->add('paid' , NULL, array('data' => false))
             ->add('lines')
+            ->add('client')
         ;
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

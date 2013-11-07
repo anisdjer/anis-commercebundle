@@ -3,12 +3,14 @@
 namespace Anis\CommerceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * LigneFacture
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="Anis\CommerceBundle\Entity\LigneFactureRepository")
+ * @UniqueEntity(fields={})
  */
 class LigneFacture
 {
@@ -24,7 +26,8 @@ class LigneFacture
     /**
      * @var Produit
      *
-     * @ORM\OneToOne(targetEntity="Anis\CommerceBundle\Entity\Produit")
+     * @ORM\ManyToOne(targetEntity="Anis\CommerceBundle\Entity\Produit")
+     * @ORM\JoinColumn(nullable=false , unique=false)
      */
     private $product;
 
@@ -177,5 +180,10 @@ class LigneFacture
     public function getFacture()
     {
         return $this->facture;
+    }
+
+    public function __toString()
+    {
+        return $this->getProduct()->__toString();
     }
 }

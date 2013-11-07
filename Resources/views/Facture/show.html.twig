@@ -1,48 +1,83 @@
-{% extends '::base.html.twig' %}
-
-{% block body -%}
-    <h1>Facture</h1>
-
-    <table class="record_properties">
-        <tbody>
+<html>
+<head>
+    <title>Facture</title>
+    <style>
+         td {
+            border: 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<center><h1>Facture N&deg; {{ facture.id }}</h1></center>
+    <div style="margin: auto;width: 100%">
+        <div style="position: absolute; right: 0; top: : 0">
+            <table border="0" style="margin-right: 0">
+                <tr>
+                    <th>Date Facturation :</th><td>{{ facture.dateFacturation|date('d-m-Y') }}</td>
+                </tr>
+                <tr>
+                    <th>Date Paiement :</th><td>{{ facture.datePaiement|date('d-m-Y') }}</td>
+                </tr>
+            </table>
+        </div>
+        <div class="client">
+            <table border="1">
+                <tr>
+                    <th colspan="2" style="">Client</th>
+                </tr>
+                <tr>
+                    <th>Nom : </th><td>{{ facture.client }}</td>
+                </tr>
+                <tr>
+                    <th>Carte d'identit&eacute; : </th><td>{{ facture.client.cin }}</td>
+                </tr>
+                <tr>
+                    <th>T&eacute;l&eacute;phone : </th><td>{{ facture.client.tel }}</td>
+                </tr>
+                <tr>
+                    <th>E-mail : </th><td>{{ facture.client.emailAddress }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br><br><br><br>
+    <div style="width: 100%">
+        <table border="1" style="float: inherit; width: 100%">
             <tr>
-                <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <th>Produit</th>
+                <th>Prix Sans remise</th>
+                <th>Remise</th>
+                <th>Prix avec Remise</th>
+                <th>Quantit&eacute;</th>
+                <th>Prix total</th>
+            </tr>
+            {% for line in facture.lines %}
+            <tr>
+                <td>{{ line.product }}</td>
+                <td>{{ line.unityPrice }}</td>
+                <td>{{ line.discount }}</td>
+                <td>{{ line.unityPrice - ( line.unityPrice * line.discount / 100 )}}</td>
+                <td>{{ line.quantity }}</td>
+                <td>{{ line.quantity * ( line.unityPrice - ( line.unityPrice * line.discount / 100 ) ) }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <th colspan="4"></th>
+                <th>Prix total</th>
+                <th>{{ facture.total }}</th>
             </tr>
             <tr>
-                <th>Datefacturation</th>
-                <td>{{ entity.dateFacturation|date('Y-m-d H:i:s') }}</td>
+                <th colspan="4"></th>
+                <th>Pay&eacute;e</th>
+                <th>{% if facture.paid %}Oui{% else %}Non{% endif %}</th>
             </tr>
             <tr>
-                <th>Datepaiement</th>
-                <td>{{ entity.datePaiement|date('Y-m-d H:i:s') }}</td>
+                <th colspan="4"></th>
+                <th>M&eacute;thode de Paiement</th>
+                <th>{{ facture.methodPaiement }}</th>
             </tr>
-            <tr>
-                <th>Methodpaiement</th>
-                <td>{{ entity.methodPaiement }}</td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <td>{{ entity.total }}</td>
-            </tr>
-            <tr>
-                <th>Paid</th>
-                <td>{{ entity.paid }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('facture') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('facture_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
-{% endblock %}
+        </table>
+    </div>
+</body>
+</html>

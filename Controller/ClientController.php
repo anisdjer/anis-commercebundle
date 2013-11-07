@@ -16,6 +16,7 @@ use Anis\CommerceBundle\Form\ClientType;
  * Client controller.
  *
  * @Route("/client")
+ * @Template()
  */
 class ClientController extends Controller
 {
@@ -26,10 +27,12 @@ class ClientController extends Controller
      * @Route("/{page}", name="client1", requirements={"page" = "\d+"})
      * @Route("/", name="client")
      * @Method("GET")
-     * @Template()
+     *
      */
     public function indexAction($page = 1)
     {
+
+
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('AnisCommerceBundle:Client')->findAllLimited($page);
@@ -46,7 +49,7 @@ class ClientController extends Controller
         /** End Search */
 
 //        $cme = new \Doctrine\ORM\Tools\Export\ClassMetadataExporter();
-//        $exporter = $cme->getExporter('xml', 'c:/temp/exp.xml');
+//        $exporter = $cme->getExporter('xml', 'c:/temp/exp2.xml');
 //        $classes = array(
 //            $em->getClassMetadata('Anis\CommerceBundle\Entity\Client')
 //        );
@@ -55,10 +58,24 @@ class ClientController extends Controller
 //        $exporter->export();
 
 
+       /* $html = $this->renderView('AnisCommerceBundle:Client:index.html.twig',
+            array('entities' => $entities,
+                'page' => $page,
+                'pages' => ($count - ($count % 10) ) / 10 + 1
+            ));
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf'
+
+            ));*/
+
         return array(
             'entities' => $entities,
             'page' => $page,
-            'pages' => ($count - ($count % 10) ) / 10 + 1
+            'pages' => (($count - 1)  - (($count - 1) % 10) ) / 10 + 1
         );
     }
 
@@ -79,7 +96,7 @@ class ClientController extends Controller
         foreach($query as $client){
 
             $clientArray = $client->toArray();
-            $clientArray["showURL"] = $this->generateUrl("client_show", array('id' => $client->getId()));
+//            $clientArray["showURL"] = $this->generateUrl("client_show", array('id' => $client->getId()));
             $clientArray["editURL"] = $this->generateUrl("client_edit", array('id' => $client->getId()));
             $clientArray["deleteURL"] = $this->generateUrl("client_delete", array('id' => $client->getId()));
             $clients[] = $clientArray;
@@ -110,7 +127,7 @@ class ClientController extends Controller
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('client_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('client'));
         }
 
         return array(
@@ -156,30 +173,6 @@ class ClientController extends Controller
         );
     }
 
-    /**
-     * Finds and displays a Client entity.
-     *
-     * @Route("/{id}/show", name="client_show")
-     * @Method("GET")
-     * @Template()
-     */
-    public function showAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('AnisCommerceBundle:Client')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Client entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-
-        return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
-        );
-    }
 
     /**
      * Displays a form to edit an existing Client entity.
@@ -203,8 +196,7 @@ class ClientController extends Controller
 
         return array(
             'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form'   => $editForm->createView(),
         );
     }
 
@@ -250,7 +242,7 @@ class ClientController extends Controller
         if ($editForm->isValid()) {
             $em->flush();
 
-            return $this->redirect($this->generateUrl('client_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('client'));
         }
 
         return array(

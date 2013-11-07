@@ -16,14 +16,13 @@ class ProduitType extends AbstractType
     {
         $builder
             ->add('reference')
-            ->add('price')
+            ->add('price', NULL, array('data' => isset($options['data']) ? $options['data']->getPrice() : 0 ))
             ->add('name')
             ->add('manufacturer')
             ->add('supplier')
-            ->add('discounted')
-            ->add('discountValue', NULL, array('data' => "0"))
-            ->add('dateDiscountEnd' ,'date', array('widget' => 'single_text', 'data' => new \DateTime()))
-            ->add('stock')
+            ->add('discountValue', NULL, array('data' => isset($options['data']) ? $options['data']->getDiscountValue() : 0 ))
+            ->add('dateDiscountEnd' ,'date', array('widget' => 'single_text', 'data' => isset($options['data']) ? $options['data']->getDateDiscountEnd() : new \DateTime()))
+            ->add('stock', NULL, array('data' => isset($options['data']) ? $options['data']->getStock() : 0 ))
             ->add('category')
             ->add('photo','file', array( 'data_class' => null, 'required' => false) )
             ->add('path')

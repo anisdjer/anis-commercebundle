@@ -106,6 +106,7 @@ class Client
 
 
 
+
     public function __construct(){
     }
 
@@ -361,21 +362,26 @@ class Client
     public function toArray()
     {
         $attributes = array();
-        if($this->age!= NULL)
+        if($this->id!= NULL)
             $attributes["id"] = $this->id;
-        if($this->age!= NULL)
+        if($this->firstname!= NULL)
             $attributes["firstname"] = $this->firstname;
-        if($this->age!= NULL)
+        if($this->lastname!= NULL)
             $attributes["lastname"] = $this->lastname;
-        if($this->age!= NULL)
+        if($this->emailAddress!= NULL)
             $attributes["emailAddress"] = $this->emailAddress;
         if($this->age!= NULL)
             $attributes["age"] = $this->age;
-        if($this->age!= NULL)
+        if($this->cin!= NULL)
             $attributes["cin"] = $this->cin;
-        if($this->age!= NULL)
+        if($this->tel!= NULL)
             $attributes["tel"] = $this->tel;
         return $attributes;
     }
 
+
+    public function __toString()
+    {
+        return $this->getFirstname()." ".$this->getLastname();//json_encode($this->toArray());
+    }
 }

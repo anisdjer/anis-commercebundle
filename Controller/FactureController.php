@@ -4,6 +4,7 @@ namespace Anis\CommerceBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -36,10 +37,25 @@ class FactureController extends Controller
         $query = $em->createQuery('SELECT COUNT(u.id) FROM AnisCommerceBundle:Facture u');
         $count = $query->getSingleScalarResult();
 
+        /*$html = $this->renderView('AnisCommerceBundle:Facture:index.html.twig',
+            array('entities' => $entities,
+                'page' => $page,
+                'pages' => ($count - ($count % 10) ) / 10 + 1
+            ));
+
+        return new Response(
+            $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+            200,
+            array(
+                'Content-Type'          => 'application/pdf'
+
+            ));*/
+
+
         return array(
             'entities' => $entities,
             'page' => $page,
-            'pages' => ($count - ($count % 10) ) / 10 + 1
+            'pages' => (($count - 1)  - (($count - 1) % 10) ) / 10 + 1
         );
     }
 
@@ -58,10 +74,11 @@ class FactureController extends Controller
         $query = $em->getRepository('AnisCommerceBundle:Facture')->getListBy($request->request->all());
         $clients = array();
         foreach($query as $client){
+            $clientArray = array();
             $clientArray = $client->toArray();
-            $clientArray["showURL"] = $this->generateUrl("client_show", array('id' => $client->getId()));
-            $clientArray["editURL"] = $this->generateUrl("client_edit", array('id' => $client->getId()));
-            $clientArray["deleteURL"] = $this->generateUrl("client_delete", array('id' => $client->getId()));
+            $clientArray["showURL"] = $this->generateUrl("facture_show", array('id' => $client->getId()));
+            $clientArray["editURL"] = $this->generateUrl("facture_edit", array('id' => $client->getId()));
+            $clientArray["deleteURL"] = $this->generateUrl("facture_delete", array('id' => $client->getId()));
 
             $clients[] = $clientArray;
         }
@@ -76,6 +93,88 @@ class FactureController extends Controller
     /**
      * Creates a new Facture entity.
      *
+     * @Route("/create", name="facture_create_service")
+     * @Method("POST")
+     */
+    public function createServiceAction(Request $request){
+
+
+
+        $em = $this->getDoctrine()->getManager();
+
+
+
+        $_facture =  $request->get("facture");
+
+        if(! isset($_facture))return new Response("", 404);
+
+        $facture = new Facture();
+
+
+        $client = $em->getRepository("AnisCommerceBundle:Client")->findOneById($_facture['client']);
+
+        if($client == null) return new Response("", 404);
+
+        $facture->setClient($client);
+
+
+        $facture->setDateFacturation(new \DateTime($_facture['dateFacturation']));
+        $facture->setDatePaiement(new \DateTime($_facture['datePaiement']));
+        $facture->setMethodPaiement($_facture['methodPaiement']);
+        $facture->setTotal(intval($_facture['total']));
+        $facture->setPaid(intval($_facture['paid']) == 0 ? false : true);
+
+
+
+        $em->persist($facture);
+
+        if(isset($_facture['lines']))
+        {
+            foreach($_facture['lines'] as $_line)
+            {
+                $line = new \Anis\CommerceBundle\Entity\LigneFacture();
+
+                if(!isset($_line['product']))$_line['product'] = 0;
+
+                $produit = $em->getRepository("AnisCommerceBundle:Produit")->findOneById($_line['product']);
+
+
+                if($produit != null){
+                    $line->setProduct($produit);
+                    $line->setFacture($facture);
+                    $line->setDiscount( floatval($_line['discount']));
+                    $line->setUnityPrice( floatval($_line['unityPrice']));
+                    $line->setQuantity( intval($_line['quantity']));
+
+                    //echo var_dump($line->getQuantity());
+
+
+                    $em->persist($line);
+
+                    $facture->addLine($line);
+
+                }
+
+
+            }
+
+
+
+
+
+        }
+
+            //die(var_dump($facture));
+        $em->flush();
+
+
+        return new Response(json_encode($facture->getId()), 200);
+
+
+    }
+    /**
+     * Creates a new Facture entity.
+     *
      * @Route("/", name="facture_create")
      * @Method("POST")
      * @Template("AnisCommerceBundle:Facture:new.html.twig")
@@ -87,11 +186,12 @@ class FactureController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $entity->setTotal($entity->getTotal());
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('facture_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('facture'));
         }
 
         return array(
@@ -140,25 +240,57 @@ class FactureController extends Controller
     /**
      * Finds and displays a Facture entity.
      *
-     * @Route("/{id}", name="facture_show")
+     * @Route("/{id}/show.{_format}", name="facture_show")
      * @Method("GET")
      * @Template()
      */
-    public function showAction($id)
+    public function showAction($id, $_format = "html")
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
+        $facture = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
-        if (!$entity) {
+        if (!$facture) {
             throw $this->createNotFoundException('Unable to find Facture entity.');
         }
 
-        $deleteForm = $this->createDeleteForm($id);
+
+
+
+
+        $html = $this->renderView('AnisCommerceBundle:Facture:show.html.twig',
+            array(
+                'facture'      => $facture,
+            ));
+
+        if($_format == "pdf")
+        {
+
+
+            return new Response(
+                $this->get('knp_snappy.pdf')->getOutputFromHtml($html),
+                200,
+                array(
+                    'Content-Type'          => 'application/pdf'
+
+                ));
+        } else if($_format == "jpeg") {
+
+
+
+            return new Response(
+                $this->get('knp_snappy.image')->getOutputFromHtml($html),
+                200,
+                array(
+                    'Content-Type'          => 'image/jpg'
+                )
+            );
+
+        }
+
 
         return array(
-            'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),
+            'facture'      => $facture
         );
     }
 
@@ -180,12 +312,10 @@ class FactureController extends Controller
         }
 
         $editForm = $this->createEditForm($entity);
-        $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'form'   => $editForm->createView(),
         );
     }
 
@@ -212,33 +342,95 @@ class FactureController extends Controller
      *
      * @Route("/{id}", name="facture_update")
      * @Method("PUT")
-     * @Template("AnisCommerceBundle:Facture:edit.html.twig")
      */
     public function updateAction(Request $request, $id)
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
+        $_facture =  $request->get("facture");
 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Facture entity.');
+        if(! isset($_facture))return new Response("", 404);
+
+        $facture = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
+
+        if (!$facture) {
+            return new Response("", 404);
         }
 
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createEditForm($entity);
-        $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
-            $em->flush();
+        $client = $em->getRepository("AnisCommerceBundle:Client")->findOneById($_facture['client']);
 
-            return $this->redirect($this->generateUrl('facture_edit', array('id' => $id)));
+        if($client == null) return new Response("", 404);
+
+        $facture->setClient($client);
+
+
+        $facture->setDateFacturation(new \DateTime($_facture['dateFacturation']));
+        $facture->setDatePaiement(new \DateTime($_facture['datePaiement']));
+        $facture->setMethodPaiement($_facture['methodPaiement']);
+        $facture->setTotal(intval($_facture['total']));
+        $facture->setPaid(intval($_facture['paid']) == 0 ? false : true);
+
+
+
+
+        foreach($facture->getLines() as $l)
+        {
+            $em->remove($l);
         }
 
-        return array(
+        $facture->emptyLines();
+
+
+        if(isset($_facture['lines']))
+        {
+            foreach($_facture['lines'] as $_line)
+            {
+                $line = new \Anis\CommerceBundle\Entity\LigneFacture();
+
+                if(!isset($_line['product']))$_line['product'] = 0;
+
+                $produit = $em->getRepository("AnisCommerceBundle:Produit")->findOneById($_line['product']);
+
+
+                if($produit != null){
+                    $line->setProduct($produit);
+                    $line->setFacture($facture);
+                    $line->setDiscount( floatval($_line['discount']));
+                    $line->setUnityPrice( floatval($_line['unityPrice']));
+                    $line->setQuantity( intval($_line['quantity']));
+
+                    //echo var_dump($line->getQuantity());
+
+
+                    $em->persist($line);
+
+                    $facture->addLine($line);
+
+                }
+
+
+            }
+
+
+
+
+
+        }
+
+        //die(json_encode(array("id" => $facture->getId(), "total" => $facture->getTotal())));
+
+
+
+        $em->flush($facture);
+        $em->flush();
+
+
+        return new Response(json_encode($facture->getId()), 200);
+        /*return array(
             'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+            'form'   => $editForm->createView(),
+        );*/
     }
     /**
      * Deletes a Facture entity.
@@ -251,7 +443,6 @@ class FactureController extends Controller
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('AnisCommerceBundle:Facture')->find($id);
 
@@ -261,7 +452,6 @@ class FactureController extends Controller
 
             $em->remove($entity);
             $em->flush();
-        }
 
         return $this->redirect($this->generateUrl('facture'));
     }

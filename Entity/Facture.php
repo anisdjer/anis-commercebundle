@@ -52,7 +52,7 @@ class Facture
     /**
      * @var boolean
      *
-     * @ORM\Column(name="paid", type="boolean")
+     * @ORM\Column(name="paid", type="boolean", nullable=true)
      */
     private $paid;
 
@@ -63,6 +63,16 @@ class Facture
      */
     private $lines;
 
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\ManyToOne(targetEntity="Anis\CommerceBundle\Entity\Client"  )
+     * @ORM\JoinColumn(nullable=false)
+     *
+     */
+    private $client;
+
+
 
     /**
      * Constructor
@@ -71,8 +81,7 @@ class Facture
     {
         $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-
+    
     /**
      * Get id
      *
@@ -153,25 +162,30 @@ class Facture
     }
 
     /**
-     * Set somme
+     * Set total
      *
-     * @param float $somme
+     * @param float $total
      * @return Facture
      */
-    public function setTotal($somme)
+    public function setTotal($total)
     {
-        $this->total = $somme;
+        $this->total = $total;
     
         return $this;
     }
 
     /**
-     * Get somme
+     * Get total
      *
      * @return float 
      */
     public function getTotal()
     {
+        /*$this->total = 0;
+        foreach($this->getLines() as $line)
+        {
+            $this->total += $line->getProduct()->getPrice();
+        }*/
         return $this->total;
     }
 
@@ -191,35 +205,34 @@ class Facture
     /**
      * Get paid
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getPaid()
     {
         return $this->paid;
     }
 
-    
     /**
-     * Add line
+     * Add lines
      *
-     * @param \Anis\CommerceBundle\Entity\LigneFacture $line
+     * @param \Anis\CommerceBundle\Entity\LigneFacture $lines
      * @return Facture
      */
-    public function addUnityInvoice(\Anis\CommerceBundle\Entity\LigneFacture $line)
+    public function addLine(\Anis\CommerceBundle\Entity\LigneFacture $lines)
     {
-        $this->lines[] = $line;
+        $this->lines[] = $lines;
     
         return $this;
     }
 
     /**
-     * Remove line
+     * Remove lines
      *
-     * @param \Anis\CommerceBundle\Entity\LigneFacture $line
+     * @param \Anis\CommerceBundle\Entity\LigneFacture $lines
      */
-    public function removeLine(\Anis\CommerceBundle\Entity\LigneFacture $line)
+    public function removeLine(\Anis\CommerceBundle\Entity\LigneFacture $lines)
     {
-        $this->unityInvoices->removeElement($line);
+        $this->lines->removeElement($lines);
     }
 
     /**
@@ -230,5 +243,60 @@ class Facture
     public function getLines()
     {
         return $this->lines;
+    }
+
+    public function emptyLines()
+    {
+        $this->lines = new \Doctrine\Common\Collections\ArrayCollection();
+
+
+        return $this;
+    }
+
+    /**
+     * Set client
+     *
+     * @param \Anis\CommerceBundle\Entity\Client $client
+     * @return Facture
+     */
+    public function setClient(\Anis\CommerceBundle\Entity\Client $client = null)
+    {
+        $this->client = $client;
+    
+        return $this;
+    }
+
+    /**
+     * Get client
+     *
+     * @return \Anis\CommerceBundle\Entity\Client 
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    public function toArray()
+    {
+        $attributes = array();
+        if($this->id!= NULL)
+            $attributes["id"] = $this->id;
+
+        $attributes["dateFacturation"] = $this->dateFacturation ? $this->dateFacturation->format('d-m-Y') : "--" ;
+
+        $attributes["datePaiement"] = $this->datePaiement ? $this->datePaiement->format('d-m-Y') : "--" ;
+
+        $attributes["methodPaiement"] = $this->methodPaiement ? $this->methodPaiement : '--';
+
+        $attributes["total"] = $this->total > 0? $this->getTotal() : 0;
+        $attributes["paid"] = $this->paid ? "Oui" : "Non";
+        //die(var_dump($attributes));
+        return $attributes;
+    }
+
+
+    public function __toString()
+    {
+        return $this->getClient()->__toString();
     }
 }
