@@ -1,6 +1,6 @@
 {
     "name": "anisdjer/anis-commercebundle",
-    "type": "git",
+    "type": "library",
     "description": "My test application.", 
     "homepage": "https://github.com/anisdjer/anis-commercebundle",
     "license": "MIT",
@@ -11,7 +11,7 @@
         }
     ],
     "require": { 
-		"symfony/framework-bundle": "~2.2",
+		"symfony/framework-bundle": ">=2.2",
         "knplabs/knp-snappy-bundle": "dev-master"
     },
     "suggest": { 
