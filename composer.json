@@ -11,9 +11,8 @@
         }
     ],
     "require": { 
-		"symfony/framework-bundle": "~2.2",
-        "knplabs/knp-snappy-bundle": "dev-master",
-        "anisdjer/anis-commercebundle" : "dev-master"
+		"symfony/framework-bundle": ">=2.2",
+        "knplabs/knp-snappy-bundle": "dev-master"
     },
     "suggest": { 
     },
